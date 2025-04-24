@@ -78,10 +78,7 @@ function AllPlayers({ player, setPlayer, favPlayer, setFavPlayer }) {
               <Link to={`/players/${pup.id}`}>
                 <button>See Details</button>
               </Link>
-
-              {myPlayerIds.includes(pup.id) && (
-                <button onClick={() => handleDelete(pup.id)}>Delete</button>
-              )}
+              <button onClick={() => handleDelete(pup.id)}>Delete</button>
             </li>
           ))}
       </ul>
