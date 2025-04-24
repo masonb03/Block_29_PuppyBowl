@@ -5,7 +5,7 @@ function AllPlayers({ player, setPlayer, favPlayer, setFavPlayer }) {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  // Load players from API
+
   useEffect(() => {
     async function fetchPlayers() {
       try {
@@ -13,7 +13,7 @@ function AllPlayers({ player, setPlayer, favPlayer, setFavPlayer }) {
           "https://fsa-puppy-bowl.herokuapp.com/api/2501-FTB-ET-WEB-PT/players"
         );
         const data = await res.json();
-        setPlayer(data.data.players); // Make sure to use data.data.players
+        setPlayer(data.data.players);
       } catch (err) {
         console.error("Failed to fetch players:", err);
       }
@@ -21,11 +21,11 @@ function AllPlayers({ player, setPlayer, favPlayer, setFavPlayer }) {
     fetchPlayers();
   }, [setPlayer]);
 
-  // Get list of player IDs you created
+
   const myPlayerIds =
     JSON.parse(localStorage.getItem("myPlayerIds"))?.map((id) => parseInt(id)) || [];
 
-  // Delete a player
+
   async function handleDelete(playerId) {
     try {
       const res = await fetch(
@@ -37,10 +37,10 @@ function AllPlayers({ player, setPlayer, favPlayer, setFavPlayer }) {
       const result = await res.json();
 
       if (result.success) {
-        // Update the displayed player list
+
         setPlayer((prev) => prev.filter((p) => p.id !== playerId));
 
-        // Update localStorage
+
         const updated = myPlayerIds.filter((id) => id !== playerId);
         localStorage.setItem("myPlayerIds", JSON.stringify(updated));
       } else {

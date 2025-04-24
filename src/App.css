@@ -1,4 +1,4 @@
-/* General Layout */
+
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -10,14 +10,14 @@ body {
   padding: 2rem;
 }
 
-/* Headers */
+
 h2, h3 {
   color: #7598b9;
   text-shadow: 0 0 10px rgba(117, 152, 185, 0.5);
   animation: fadeIn 1s ease-in-out;
 }
 
-/* Form Styling */
+
 form {
   background-color: #2b3a47;
   padding: 1.5rem;
@@ -45,7 +45,7 @@ input:focus, select:focus {
   background-color: #7598b9;
 }
 
-/* Buttons */
+
 button {
   background-color: #800c1f;
   color: white;
@@ -67,7 +67,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Player List */
+
 ul {
   list-style-type: none;
   padding: 0;
@@ -84,7 +84,7 @@ li {
   animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Message Paragraph */
+
 p {
   margin-top: 1rem;
   font-weight: bold;
@@ -92,7 +92,6 @@ p {
   color: #7598b9;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
