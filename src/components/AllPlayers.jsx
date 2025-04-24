@@ -1,40 +1,92 @@
-import {useState, useEffect} from 'react';
-import {useNavigate, Link} from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
-function AllPlayers({player, setPlayer, favPlayer, setFavPlayer}) {
-    const navigate = useNavigate();
+function AllPlayers({ player, setPlayer, favPlayer, setFavPlayer }) {
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
-    useEffect(() =>{
-        async function fetchPlayers(){
-            try{
-                const res = await fetch(
-                    'https://fsa-puppy-bowl.herokuapp.com/api/2501-FTB-ET-WEB-PT/players'
-                );
-                const data = await res.json()
-                setPlayer(data.data.players)
-            }catch(err){
-                console.error("Failed to fetch players:", err)
-            }
+  // Load players from API
+  useEffect(() => {
+    async function fetchPlayers() {
+      try {
+        const res = await fetch(
+          "https://fsa-puppy-bowl.herokuapp.com/api/2501-FTB-ET-WEB-PT/players"
+        );
+        const data = await res.json();
+        setPlayer(data.data.players); // Make sure to use data.data.players
+      } catch (err) {
+        console.error("Failed to fetch players:", err);
+      }
+    }
+    fetchPlayers();
+  }, [setPlayer]);
+
+  // Get list of player IDs you created
+  const myPlayerIds =
+    JSON.parse(localStorage.getItem("myPlayerIds"))?.map((id) => parseInt(id)) || [];
+
+  // Delete a player
+  async function handleDelete(playerId) {
+    try {
+      const res = await fetch(
+        `https://fsa-puppy-bowl.herokuapp.com/api/2501-FTB-ET-WEB-PT/players/${playerId}`,
+        {
+          method: "DELETE"
         }
-        fetchPlayers();
-    }, [setPlayer])
+      );
+      const result = await res.json();
 
-    return(
-        <div>
-            <h3>All Players</h3>
-            {player.length === 0 ? (
-                <p>Loading players...</p>
-            ) : (
-                <ul>
-                    {player.map((pup) =>(
-                        <li key={pup.id}>
-                            <Link to={`/players/${pup.id}`}>{pup.name}</Link> - {pup.breed}
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
-    );
+      if (result.success) {
+        // Update the displayed player list
+        setPlayer((prev) => prev.filter((p) => p.id !== playerId));
+
+        // Update localStorage
+        const updated = myPlayerIds.filter((id) => id !== playerId);
+        localStorage.setItem("myPlayerIds", JSON.stringify(updated));
+      } else {
+        alert("Failed to delete player.");
+      }
+    } catch (err) {
+      console.error("Error deleting player:", err);
+      alert("Something went wrong.");
+    }
+  }
+
+  return (
+    <div>
+      <h3>All Puppy Bowl Players</h3>
+
+      <input
+        type="text"
+        placeholder="Search players..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <ul>
+        {player
+          .filter((pup) =>
+            pup.name.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((pup) => (
+            <li key={pup.id} style={{ marginBottom: "1em" }}>
+              <strong>{pup.name}</strong> - {pup.breed}
+              <br />
+              Status: {pup.status}
+              <br />
+              <button onClick={() => setFavPlayer(pup)}>Favorite</button>
+              <Link to={`/players/${pup.id}`}>
+                <button>See Details</button>
+              </Link>
+
+              {myPlayerIds.includes(pup.id) && (
+                <button onClick={() => handleDelete(pup.id)}>Delete</button>
+              )}
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
 }
 
 export default AllPlayers;

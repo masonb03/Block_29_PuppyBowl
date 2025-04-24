@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function SinglePlayer(){
 const {id} = useParams();
@@ -30,7 +31,14 @@ if(!player){
             <p><strong>Breed:</strong>{player.breed}</p>
             <p><strong>Status:</strong>{player.status}</p>
             <p><strong>Team:</strong>{player.team?.name || JSON.stringify(player.team) || 'No team assigned'}</p>
-            <img src={player.imageUrl} alt={player.name} width="200" />
+            {player.imageUrl ? (
+                <img src={player.imageUrl} alt={player.name} width="200" />
+            ) :(
+                <p>No image avaliable</p>
+            )}
+            <Link to="/">
+            <button>Back Home</button>
+            </Link>
         </div>
     )
 }
